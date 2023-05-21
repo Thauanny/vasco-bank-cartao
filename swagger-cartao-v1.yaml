@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: Swagger Petstore - OpenAPI 3.0
-  description: |-
-    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+  title: vasco-bank-cartao - OpenAPI 3.0
+  description: ''
   version: 1.0.11
 
 servers:
-  - url: https://petstore3.swagger.io/api/v3
+  - url: https:/vasco-bank-cartao/api/v1
+  
 tags:
   - name: cartaoCredito
     description: Operations about user
@@ -16,7 +16,7 @@ paths:
     get:
       tags:
         - cartaoCredito
-      summary: Retorna informação do cartao de credito caso existir
+      summary: Retorna informação do cartao de credito caso se existir
       description: This can only be done by the logged in user.
       operationId: createUser
       parameters:
@@ -33,10 +33,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/cartoes'
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/cartoes'
   /cartaoCredito/aquisicao:
     post:
       tags:
@@ -48,13 +48,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
         required: true
       responses:
         '200':
@@ -62,18 +62,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/cartaoCredito'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/cartaoCredito'
         default:
           description: successful operation
 
-  /cartaoCredito/{userId}/limite:
+  /cartaoCredito/{userId}/{cartaoId}/limite:
     get:
       tags:
         - cartaoCredito
-      summary: Get user by user name
+      summary: Get limite do cartao
       description: ''
       operationId: cartaoCreditoLimite
       parameters:
@@ -84,22 +84,66 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: cartaoId
+          in: path
+          description: ID do cartao
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/limite'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/limite'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+          
+  /cartaoCredito/{userId}/{cartaoId}/fatura:
+    get:
+      tags:
+        - cartaoCredito
+      summary: Get fatura do cartao
+      description: ''
+      operationId: cartaoCreditoFatura
+      parameters:
+        - name: userId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cartaoId
+          in: path
+          description: ID do cartao
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
         '400':
           description: Invalid username supplied
         '404':
           description: User not found
 
-  /cartaoCredito/{userId}/extrato:
+  /cartaoCredito/{userId}/{cartaoId}/extrato:
     get:
       tags:
         - cartaoCredito
@@ -114,16 +158,23 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: cartaoId
+          in: path
+          description: ID do cartao
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/cartaoCredito'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/cartaoCredito'
         '400':
           description: Invalid username supplied
         '404':
@@ -140,13 +191,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/cartaoCredito'
         required: true
       responses:
         '200':
@@ -154,10 +205,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'          
+                $ref: '#/components/schemas/cartaoCredito'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/cartaoCredito'
         '400':
           description: Invalid username supplied
         '404':
@@ -165,200 +216,59 @@ paths:
     
 components:
   schemas:
-    Order:
+    cartoes:
+          type: array
+          xml:
+            wrapped: true
+            name: cartoes
+          items:
+            $ref: '#/components/schemas/cartaoCredito'
+         
+    cartaoCredito:
       type: object
       properties:
         id:
           type: integer
           format: int64
           example: 10
-        petId:
-          type: integer
-          format: int64
-          example: 198772
-        quantity:
-          type: integer
-          format: int32
-          example: 7
-        shipDate:
+        nome:
           type: string
-          format: date-time
-        status:
+          example: 'John K. pascal'
+        numero:
           type: string
-          description: Order Status
-          example: approved
-          enum:
-            - placed
-            - approved
-            - delivered
-        complete:
+          example: '1234 1232 1234 1232'
+        dataVencimento:
+          type: string
+          format: date
+        cvv:
+          type: string
+          example: '123'
+        limite:
+          type: number
+          example: 9.999
+        eligivelAumentoLimite:
           type: boolean
+          example: 'false'
+        virtual:
+          type: boolean
+          example: 'false'
       xml:
-        name: order
-    Customer:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 100000
-        username:
-          type: string
-          example: fehguy
-        address:
-          type: array
-          xml:
-            name: addresses
-            wrapped: true
-          items:
-            $ref: '#/components/schemas/Address'
-      xml:
-        name: customer
-    Address:
-      type: object
-      properties:
-        street:
-          type: string
-          example: 437 Lytton
-        city:
-          type: string
-          example: Palo Alto
-        state:
-          type: string
-          example: CA
-        zip:
-          type: string
-          example: '94301'
-      xml:
-        name: address
-    Category:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 1
-        name:
-          type: string
-          example: Dogs
-      xml:
-        name: category
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        username:
-          type: string
-          example: theUser
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: James
-        email:
-          type: string
-          example: john@email.com
-        password:
-          type: string
-          example: '12345'
-        phone:
-          type: string
-          example: '12345'
-        userStatus:
-          type: integer
-          description: User Status
-          format: int32
-          example: 1
-      xml:
-        name: user
-    Tag:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-      xml:
-        name: tag
-    Pet:
-      required:
-        - name
-        - photoUrls
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        name:
-          type: string
-          example: doggie
-        category:
-          $ref: '#/components/schemas/Category'
-        photoUrls:
-          type: array
-          xml:
-            wrapped: true
-          items:
-            type: string
-            xml:
-              name: photoUrl
-        tags:
-          type: array
-          xml:
-            wrapped: true
-          items:
-            $ref: '#/components/schemas/Tag'
-        status:
-          type: string
-          description: pet status in the store
-          enum:
-            - available
-            - pending
-            - sold
-      xml:
-        name: pet
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        type:
-          type: string
-        message:
-          type: string
-      xml:
-        name: '##default'
-  requestBodies:
-    Pet:
-      description: Pet object that needs to be added to the store
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Pet'
-        application/xml:
-          schema:
-            $ref: '#/components/schemas/Pet'
-    UserArray:
-      description: List of user object
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/User'
+        name: cartaoCredito
+    limite:
+        type: object
+        properties:
+          valor:
+            type: number
+            format: int64
+            example: 99.999
+        xml:
+          name: limite
   securitySchemes:
     petstore_auth:
       type: oauth2
       flows:
         implicit:
-          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          authorizationUrl: https://vasco-bank-cartao/api/v1/oauth/authorize
           scopes:
             write:pets: modify pets in your account
             read:pets: read your pets
