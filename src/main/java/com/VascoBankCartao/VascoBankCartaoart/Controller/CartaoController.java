@@ -30,7 +30,7 @@ public class CartaoController
         }
 
         @PostMapping("/{idConta}/{idCartao}/pagamento")
-        public ResponseEntity<?> pagamentoCartao(@PathVariable Integer idConta, @PathVariable Integer idConta, @RequestBody Pagamento pagamento) {
+        public ResponseEntity<?> pagamentoCartao(@PathVariable Integer idConta, @PathVariable Integer idCartao, @RequestBody Pagamento pagamento) {
                 try {
                         // chamada service
                         System.out.println(idConta);
@@ -98,7 +98,7 @@ public class CartaoController
                 }
         }
         @GetMapping("/{idConta}/{idCartao}/extrato/{intervalo}")
-        public ResponseEntity<?> extratoCartao(@PathVariable Integer idConta,@PathVariable Integer idCartao, @PathVariable Integer idConta,@PathVariable Intervalo intervalo) {
+        public ResponseEntity<?> extratoCartao(@PathVariable Integer idConta,@PathVariable Integer idCartao,@PathVariable Intervalo intervalo) {
                 try {
                         // chamada service
                         System.out.println(idConta);

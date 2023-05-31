@@ -12,15 +12,15 @@ tags:
     description: Operations about user
 paths:
 
-  /cartaoCredito/{userId}:
+  /cartaoCredito/{contaId}/all:
     get:
       tags:
         - cartaoCredito
-      summary: Retorna informação do cartao de credito caso se existir
+      summary: Retorna informações de todos cartoes de credito de uma conta caso existir
       description: This can only be done by the logged in user.
-      operationId: createUser
+      operationId: cartaoall
       parameters:
-        - name: userId
+        - name: contaId
           in: path
           description: ID do usuario
           required: true
@@ -37,13 +37,86 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/cartoes'
-  /cartaoCredito/aquisicao:
+  /cartaoCredito/{contaId}/{cartaoId}:
+    get:
+      tags:
+        - cartaoCredito
+      summary: Retorna informação do cartao de credito de uma conta caso existir
+      description: This can only be done by the logged in user.
+      operationId: cartao
+      parameters:
+        - name: contaId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cartaoId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
+    delete:
+      tags:
+        - cartaoCredito
+      summary: Deletar cartao do usuario de conta especificada
+      description: Creates list of users with given input array
+      operationId: cartaoDelete
+      parameters:
+        - name: contaId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: cartaoId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
+        default:
+          description: successful operation
+  /cartaoCredito/{contaId}:
     post:
       tags:
         - cartaoCredito
-      summary: precisamos verificar antes se ele é elegivel?
+      summary: Criar cartao na conta
       description: Creates list of users with given input array
-      operationId: cartaoCreditoAquisicao
+      operationId: cartaoPost
+      parameters:
+        - name: contaId
+          in: path
+          description: ID do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -69,17 +142,17 @@ paths:
         default:
           description: successful operation
 
-  /cartaoCredito/{userId}/{cartaoId}/limite:
+  /cartaoCredito/{contaId}/{cartaoId}/limite:
     get:
       tags:
         - cartaoCredito
-      summary: Get limite do cartao
+      summary: Recuperar limite do cartao
       description: ''
       operationId: cartaoCreditoLimite
       parameters:
-        - name: userId
+        - name: contaId
           in: path
-          description: ID do usuario
+          description: ID da conta do usuario
           required: true
           schema:
             type: integer
@@ -106,17 +179,17 @@ paths:
         '404':
           description: User not found
           
-  /cartaoCredito/{userId}/{cartaoId}/fatura:
+  /cartaoCredito/{contaId}/{cartaoId}/fatura/:
     get:
       tags:
         - cartaoCredito
-      summary: Get fatura do cartao
+      summary: Recuperar fatura do cartao
       description: ''
       operationId: cartaoCreditoFatura
       parameters:
-        - name: userId
+        - name: contaId
           in: path
-          description: ID do usuario
+          description: ID da conta do usuario
           required: true
           schema:
             type: integer
@@ -143,28 +216,38 @@ paths:
         '404':
           description: User not found
 
-  /cartaoCredito/{userId}/{cartaoId}/extrato:
+  /cartaoCredito/{contaId}/{cartaoId}/extrato/{intervalo}:
     get:
       tags:
         - cartaoCredito
-      summary: Get user by user name
+      summary: Recuperar extrato de acordo com um intervalo
       description: ''
       operationId: cartaoCreditoExtrato
       parameters:
-        - name: userId
+        - name: contaId
           in: path
-          description: ID do usuario
+          description: ID da conta do usuario
           required: true
           schema:
             type: integer
             format: int64
         - name: cartaoId
           in: path
-          description: ID do cartao
+          description: ID do cartao do cartao
           required: true
           schema:
             type: integer
             format: int64
+        - name: intervalo
+          in: path
+          description: Enum de identificacao do intervalo do extrato
+          required: true
+          schema:
+              type: string
+              enum:
+              - DIA
+              - MES
+              - ANUAL
       responses:
         '200':
           description: successful operation
@@ -180,24 +263,39 @@ paths:
         '404':
           description: User not found     
           
-  /cartaoCredito/pagamento:
+  /cartaoCredito/{contaId}/{cartaoId}/pagamento:
     post:
       tags:
         - cartaoCredito
-      summary: Get user by user name
+      summary: Realiza pagamento do cartao do usuario
       description: ''
       operationId: cartaoCreditoPagamento
+      parameters:
+        - name: cartaoId
+          in: path
+          description: ID do cartao do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: contaId
+          in: path
+          description: ID da conta do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/cartaoCredito'
+              $ref: '#/components/schemas/limite'
           application/xml:
             schema:
-              $ref: '#/components/schemas/cartaoCredito'
+              $ref: '#/components/schemas/limite'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/cartaoCredito'
+              $ref: '#/components/schemas/limite'
         required: true
       responses:
         '200':
@@ -205,10 +303,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/cartaoCredito'          
+                $ref: '#/components/schemas/limite'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/cartaoCredito'
+                $ref: '#/components/schemas/limite'
         '400':
           description: Invalid username supplied
         '404':
@@ -238,8 +336,7 @@ components:
           type: string
           example: '1234 1232 1234 1232'
         dataVencimento:
-          type: string
-          format: date
+          type: string  
         cvv:
           type: string
           example: '123'
