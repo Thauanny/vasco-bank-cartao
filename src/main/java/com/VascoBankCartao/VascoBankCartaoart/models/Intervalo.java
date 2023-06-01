@@ -1,2 +1,5 @@
 package com.VascoBankCartao.VascoBankCartaoart.models;
-        public enum Intervalo {DIA,MENSAL,ANUAL}
+
+public enum Intervalo {
+        DIA, MENSAL, ANUAL
+}
