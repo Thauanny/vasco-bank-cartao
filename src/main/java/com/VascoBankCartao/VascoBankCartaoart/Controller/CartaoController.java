@@ -1,9 +1,10 @@
 package com.VascoBankCartao.VascoBankCartaoart.Controller;
 
 import com.VascoBankCartao.VascoBankCartaoart.models.CartaoCredito;
-import com.VascoBankCartao.VascoBankCartaoart.models.Intervalo;
-import com.VascoBankCartao.VascoBankCartaoart.models.Pagamento;
+import com.VascoBankCartao.VascoBankCartaoart.models.Fatura;
+import com.VascoBankCartao.VascoBankCartaoart.service.CartaoService;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,98 +17,68 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping(value = "/cartaoCredito")
-public class CartaoController
-{
+public class CartaoController {
+
+        @Autowired
+        private CartaoService cartaoService;
+
         @PostMapping("/{idConta}")
-        public ResponseEntity<?> cadastraCartao(@PathVariable Integer idConta, @RequestBody CartaoCredito cartaoCredito) {
+        public ResponseEntity<?> cadastraCartao(@PathVariable Integer idConta,
+                        @RequestBody CartaoCredito cartaoCredito) {
+                                //todo verificar conta existe
                 try {
-                        // chamada service
-                        System.out.println(idConta);
-
-                        return ResponseEntity.ok(cartaoCredito);
+                        return ResponseEntity.ok(cartaoService.cadastraCartao(cartaoCredito));
                 } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
 
-        @PostMapping("/{idConta}/{idCartao}/pagamento")
-        public ResponseEntity<?> pagamentoCartao(@PathVariable Integer idConta, @PathVariable Integer idCartao, @RequestBody Pagamento pagamento) {
+        @GetMapping("/{idCartao}")
+        public ResponseEntity<?> retornarCartao(@PathVariable Integer idCartao) {
                 try {
-                        // chamada service
-                        System.out.println(idConta);
-
-                        return ResponseEntity.ok(pagamento);
+                                                        //todo verificar conta existe
+                        return ResponseEntity.ok(cartaoService.retornarCartao(idCartao));
                 } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
 
-        @GetMapping("/{idConta}/{idCartao}")
-        public ResponseEntity<?> cartao(@PathVariable Integer idConta,@PathVariable Integer idCartao) {
+
+        @GetMapping("/all/{idConta}")
+        public ResponseEntity<?> retornarTodosCartoes(@PathVariable Integer idConta) {
+                try {
+                                                        //todo verificar conta existe
+                        return ResponseEntity.ok(cartaoService.retornarTodosCartoes(idConta));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
+                }
+        }
+
+        @DeleteMapping("/{idCartao}")
+        public ResponseEntity<?> deleteCartao(@PathVariable Integer idCartao) {
                 try {
                         // chamada service
-                        System.out.println(idConta);
+                        System.out.println(idCartao);
                         return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
-        @GetMapping("/{idConta}/all")
-        public ResponseEntity<?> cartaoAll(@PathVariable Integer idConta) {
-                try {
-                        // chamada service
-                        System.out.println(idConta);
-                        return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
-                } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
-                }
-        }
-        @DeleteMapping("/{idConta}/{idCartao}")
-        public ResponseEntity<?> deleteCartao(@PathVariable Integer idConta, @PathVariable Integer idCartao) {
-                try {
-                        // chamada service
-                        System.out.println(idConta);
-                        return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
-                } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
-                }
-        }
+
         @GetMapping("/{idConta}/{idCartao}/limite")
-        public ResponseEntity<?> limiteCartao(@PathVariable Integer idConta,@PathVariable Integer idCartao) {
+        public ResponseEntity<?> limiteCartao(@PathVariable Integer idConta, @PathVariable Integer idCartao) {
                 try {
+
                         // chamada service
                         System.out.println(idConta);
                         return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
-                }
-        }
-        @GetMapping("/{idConta}/{idCartao}/fatura")
-        public ResponseEntity<?> faturaCartao(@PathVariable Integer idConta,@PathVariable Integer idCartao) {
-                try {
-                        // chamada service
-                        System.out.println(idConta);
-                        return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
-                } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
-                }
-        }
-        @GetMapping("/{idConta}/{idCartao}/extrato/{intervalo}")
-        public ResponseEntity<?> extratoCartao(@PathVariable Integer idConta,@PathVariable Integer idCartao,@PathVariable Intervalo intervalo) {
-                try {
-                        // chamada service
-                        System.out.println(idConta);
-                        return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
-                } catch (Exception e) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body("{\"message\": \"Nao foi possivel concluir\"}");
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
 }
