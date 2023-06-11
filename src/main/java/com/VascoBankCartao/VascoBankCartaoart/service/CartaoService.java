@@ -22,24 +22,25 @@ public class CartaoService {
     public CartaoCredito retornarCartao(Integer idCartao) {
         return cartaoRepository.findById(idCartao).get();
     }
+
     public List<CartaoCredito> retornarTodosCartoes(Integer idCartao) {
         return cartaoRepository.findAllById(idCartao);
     }
 
-    public void deletaCartao(Integer idCartao) { cartaoRepository.deleteById(idCartao);}
-
-    public double limiteCartao(Integer idCartao){ return retornarCartao(idCartao).getLimite()}
-
-    public void aumentaLimite(Integer idCartao, double aumentoDesejavel){
-        if (retornarCartao(idCartao).isEligivelAumentoLimite()){
-            CartaoCredito cartaoCliente = retornarCartao(idCartao);
-            cartaoCliente.setLimite(cartaoCliente.getLimite()+aumentoDesejavel);
-            cadastraCartao(cartaoCliente);
-        }
+    public void deletaCartao(Integer idCartao) {
+        cartaoRepository.deleteById(idCartao);
     }
 
+    public CartaoCredito solicitarAumentoLimite(CartaoCredito cartao, double aumentoDesejavel) {
+        cartao.setLimite(cartao.getLimite() + aumentoDesejavel);
+        return cadastraCartao(cartao);
 
+    }
 
+    public CartaoCredito atualizarEligivelAumentoLimite(CartaoCredito cartao, boolean elegivel) {
+        cartao.setEligivelAumentoLimite(elegivel);
+        return cadastraCartao(cartao);
 
+    }
 
 }
