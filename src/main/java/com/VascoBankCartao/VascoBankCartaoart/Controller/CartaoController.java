@@ -1,7 +1,6 @@
 package com.VascoBankCartao.VascoBankCartaoart.Controller;
 
 import com.VascoBankCartao.VascoBankCartaoart.models.CartaoCredito;
-import com.VascoBankCartao.VascoBankCartaoart.models.Fatura;
 import com.VascoBankCartao.VascoBankCartaoart.models.DTO.AumentoDTO;
 import com.VascoBankCartao.VascoBankCartaoart.models.DTO.ContaDTO;
 import com.VascoBankCartao.VascoBankCartaoart.models.DTO.ElegibilidadeDTO;
@@ -107,7 +106,7 @@ public class CartaoController {
         @PutMapping("/solicitarAumentoLimite")
         public ResponseEntity<?> solicitarAumentoLimite(@RequestBody AumentoDTO aumento) {
                 try {
-                        CartaoCredito cartao = cartaoService.retornarCartao(aumento.getIdConta());
+                        CartaoCredito cartao = cartaoService.retornarCartao(aumento.getIdCartao());
                         if (cartao == null)
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                                 .body("{\"message\": \"usuario não possui cartao cadastrado\"}");
@@ -126,7 +125,7 @@ public class CartaoController {
         @PutMapping("/atualizarEligivelAumentoLimite")
         public ResponseEntity<?> atualizarEligivelAumentoLimite(@RequestBody ElegibilidadeDTO elegibilidade) {
                 try {
-                        CartaoCredito cartao = cartaoService.retornarCartao(elegibilidade.getIdConta());
+                        CartaoCredito cartao = cartaoService.retornarCartao(elegibilidade.getIdCartao());
                         if (cartao == null)
                                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                                 .body("{\"message\": \"usuario não possui cartao cadastrado\"}");

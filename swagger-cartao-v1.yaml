@@ -12,7 +12,7 @@ tags:
     description: Operations about user
 paths:
 
-  /cartaoCredito/{contaId}/all:
+  /cartaoCredito/all/{idConta}:
     get:
       tags:
         - cartaoCredito
@@ -20,7 +20,7 @@ paths:
       description: This can only be done by the logged in user.
       operationId: cartaoall
       parameters:
-        - name: contaId
+        - name: idConta
           in: path
           description: ID do usuario
           required: true
@@ -37,7 +37,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/cartoes'
-  /cartaoCredito/{contaId}/{cartaoId}:
+  /cartaoCredito/{idCartao}:
     get:
       tags:
         - cartaoCredito
@@ -45,14 +45,7 @@ paths:
       description: This can only be done by the logged in user.
       operationId: cartao
       parameters:
-        - name: contaId
-          in: path
-          description: ID do usuario
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: cartaoId
+        - name: idCartao
           in: path
           description: ID do usuario
           required: true
@@ -76,14 +69,7 @@ paths:
       description: Creates list of users with given input array
       operationId: cartaoDelete
       parameters:
-        - name: contaId
-          in: path
-          description: ID do usuario
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: cartaoId
+        - name: idCartao
           in: path
           description: ID do usuario
           required: true
@@ -102,7 +88,7 @@ paths:
                 $ref: '#/components/schemas/cartaoCredito'
         default:
           description: successful operation
-  /cartaoCredito/{contaId}:
+  /cartaoCredito/{idUser}:
     post:
       tags:
         - cartaoCredito
@@ -110,7 +96,7 @@ paths:
       description: Creates list of users with given input array
       operationId: cartaoPost
       parameters:
-        - name: contaId
+        - name: idUser
           in: path
           description: ID do usuario
           required: true
@@ -142,7 +128,7 @@ paths:
         default:
           description: successful operation
 
-  /cartaoCredito/{contaId}/{cartaoId}/limite:
+  /cartaoCredito/limite/{cartaoId}:
     get:
       tags:
         - cartaoCredito
@@ -150,13 +136,6 @@ paths:
       description: ''
       operationId: cartaoCreditoLimite
       parameters:
-        - name: contaId
-          in: path
-          description: ID da conta do usuario
-          required: true
-          schema:
-            type: integer
-            format: int64
         - name: cartaoId
           in: path
           description: ID do cartao
@@ -174,6 +153,73 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/limite'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+  /cartaoCredito/solicitarAumentoLimite:
+    put:
+      tags:
+        - cartaoCredito
+      summary: solicitar aumento de limite
+      description: ''
+      operationId: solicitarAumentoLimite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/aumentoDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/aumentoDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/aumentoDTO'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found
+          
+  /cartaoCredito/atualizarEligivelAumentoLimite:
+    put:
+      tags:
+        - cartaoCredito
+      summary: atualizar elegibilidade de aumento de limite
+      description: ''
+      operationId: atualizarEligivelAumentoLimite
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ElegibilidadeDTO'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/ElegibilidadeDTO'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ElegibilidadeDTO'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/cartaoCredito'
         '400':
           description: Invalid username supplied
         '404':
@@ -216,71 +262,45 @@ paths:
         '404':
           description: User not found
 
-  /cartaoCredito/{contaId}/{cartaoId}/extrato/{intervalo}:
+  /fatura/{idCartao}:
     get:
       tags:
         - cartaoCredito
-      summary: Recuperar extrato de acordo com um intervalo
+      summary: Recuperar faturas de um cartao
       description: ''
-      operationId: cartaoCreditoExtrato
+      operationId: fatura
       parameters:
-        - name: contaId
+        - name: idCartao
           in: path
           description: ID da conta do usuario
           required: true
           schema:
             type: integer
             format: int64
-        - name: cartaoId
-          in: path
-          description: ID do cartao do cartao
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: intervalo
-          in: path
-          description: Enum de identificacao do intervalo do extrato
-          required: true
-          schema:
-              type: string
-              enum:
-              - DIA
-              - MES
-              - ANUAL
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/extrato'          
+                $ref: '#/components/schemas/faturas'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/extrato'
+                $ref: '#/components/schemas/faturas'
         '400':
           description: Invalid username supplied
         '404':
-          description: User not found     
-          
-  /cartaoCredito/{contaId}/{cartaoId}/pagamento:
+          description: User not found 
     post:
       tags:
         - cartaoCredito
-      summary: Realiza pagamento do cartao do usuario
+      summary: cadastra uma fatura de um cartao
       description: ''
       operationId: cartaoCreditoPagamento
       parameters:
-        - name: cartaoId
+        - name: idCartao
           in: path
           description: ID do cartao do usuario
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - name: contaId
-          in: path
-          description: ID da conta do usuario
           required: true
           schema:
             type: integer
@@ -289,13 +309,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/limite'
+              $ref: '#/components/schemas/fatura'
           application/xml:
             schema:
-              $ref: '#/components/schemas/limite'
+              $ref: '#/components/schemas/fatura'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/limite'
+              $ref: '#/components/schemas/fatura'
         required: true
       responses:
         '200':
@@ -303,14 +323,85 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/limite'          
+                $ref: '#/components/schemas/fatura'          
             application/xml:
               schema:
-                $ref: '#/components/schemas/limite'
+                $ref: '#/components/schemas/faturas'
         '400':
           description: Invalid username supplied
         '404':
           description: User not found   
+          
+          
+  /compra/{idCartao}:
+    post:
+      tags:
+        - cartaoCredito
+      summary: Realiza compra no cartao do usuario
+      description: ''
+      operationId: compra
+      parameters:
+        - name: idCartao
+          in: path
+          description: ID do cartao do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/compra'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/compra'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/compra'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/compra'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/compra'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found  
+    get:
+      tags:
+        - cartaoCredito
+      summary: Recuperar compras de um cartao
+      description: ''
+      operationId: getcompra
+      parameters:
+        - name: idCartao
+          in: path
+          description: ID da conta do usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/compras'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/compras'
+        '400':
+          description: Invalid username supplied
+        '404':
+          description: User not found 
     
 components:
   schemas:
@@ -326,6 +417,10 @@ components:
       type: object
       properties:
         id:
+          type: integer
+          format: int64
+          example: 10
+        idConta:
           type: integer
           format: int64
           example: 10
@@ -367,6 +462,10 @@ components:
             type: integer
             format: int64
             example: 10
+          idCartao:
+            type: integer
+            format: int64
+            example: 10
           valorTotal:
             type: number
             format: int64
@@ -377,6 +476,21 @@ components:
           dataVencimento:
             type: string
             format: date
+          mesVencimento:
+            type: string
+            enum:
+              - JAN
+              - FEV
+              - MAR
+              - ABR
+              - MAI
+              - JUN
+              - JUL
+              - AGO
+              - SET
+              - OUT
+              - NOV
+              - DEZ
           compras:
             type: array
             xml:
@@ -394,6 +508,10 @@ components:
             type: integer
             format: int64
             example: 10
+          idCartao:
+            type: integer
+            format: int64
+            example: 10
           valor:
             type: number
             format: int64
@@ -401,6 +519,21 @@ components:
           dataCompra:
             type: string
             format: date
+          mesCompra:
+            type: string
+            enum:
+              - JAN
+              - FEV
+              - MAR
+              - ABR
+              - MAI
+              - JUN
+              - JUL
+              - AGO
+              - SET
+              - OUT
+              - NOV
+              - DEZ
           local:
             type: string
             example: 'uber'
@@ -409,26 +542,47 @@ components:
             example: 12
         xml:
           name: compra
+    compras:
+        type: array
+        xml:
+          wrapped: true
+          name: compras
+        items:
+          $ref: '#/components/schemas/compra'
+            
+    faturas:
+        type: array
+        xml:
+          wrapped: true
+          name: faturas
+        items:
+          $ref: '#/components/schemas/fatura'
           
-    extrato:
+    aumentoDTO:
       type: object
       properties:
-        id:
+        idCartao:
           type: integer
           format: int64
           example: 10
-        dataOperacao:
-          type: string
-          format: date
-        operacao:
-          type: string
-          enum:
-            - PIX
-            - BOLETO
-            - INTRABANCO
-            - PAGCARTAO
+        valor:
+          type: number
+       
       xml:
-        name: extrato
+        name: aumentoDTO
+        
+    ElegibilidadeDTO:
+      type: object
+      properties:
+        idCartao:
+          type: integer
+          format: int64
+          example: 10
+        valor:
+          type: boolean
+       
+      xml:
+        name: ElegibilidadeDTO
           
           
            

@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
 @Repository
 public interface CartaoRepository extends JpaRepository<CartaoCredito, Integer> {
 
-    @Query(value = "SELECT * FROM COMPRA WHERE id_cartao = :cartaoId", nativeQuery = true)
-    public List<CartaoCredito> findAllById(@Param("cartaoId") Integer cartaoId);
+    @Query(value = "SELECT * FROM COMPRA WHERE id_conta = :contaId", nativeQuery = true)
+    public List<CartaoCredito> findAllById(@Param("contaId") Integer contaId);
 
 }

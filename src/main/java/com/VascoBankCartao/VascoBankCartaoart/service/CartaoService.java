@@ -23,8 +23,8 @@ public class CartaoService {
         return cartaoRepository.findById(idCartao).get();
     }
 
-    public List<CartaoCredito> retornarTodosCartoes(Integer idCartao) {
-        return cartaoRepository.findAllById(idCartao);
+    public List<CartaoCredito> retornarTodosCartoes(Integer contaId) {
+        return cartaoRepository.findAllById(contaId);
     }
 
     public void deletaCartao(Integer idCartao) {

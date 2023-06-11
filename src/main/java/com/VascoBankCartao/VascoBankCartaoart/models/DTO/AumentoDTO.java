@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AumentoDTO {
-    Integer idConta;
+    Integer idCartao;
     double valor;
 }

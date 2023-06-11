@@ -10,6 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ElegibilidadeDTO {
-    Integer idConta;
+    Integer idCartao;
     boolean elegivel;
 }
