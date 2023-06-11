@@ -61,24 +61,36 @@ public class CartaoController {
         public ResponseEntity<?> deleteCartao(@PathVariable Integer idCartao) {
                 try {
                         // chamada service
-                        System.out.println(idCartao);
-                        return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
+                        cartaoService.deletaCartao(idCartao);
+                        return ResponseEntity.ok("{\"message\": \"Cartão deletado com sucesso\"}");
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                         .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
 
-        @GetMapping("/{idConta}/{idCartao}/limite")
-        public ResponseEntity<?> limiteCartao(@PathVariable Integer idConta, @PathVariable Integer idCartao) {
+        @GetMapping("/{idCartao}/limite")
+        public ResponseEntity<?> limiteCartao(@PathVariable Integer idCartao) {
                 try {
 
                         // chamada service
-                        System.out.println(idConta);
+                        cartaoService.limiteCartao(idCartao);
                         return ResponseEntity.ok("{\"message\": \"Em contrucao\"}");
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                         .body("{\"message\": \"Nao foi possivel concluir\"}");
+                }
+        }
+        @GetMapping("/{idCartao}/limite")
+        public ResponseEntity<?> aumentarLimite(@PathVariable Integer idCartao, @PathVariable double aumentoDesejado) {
+                try {
+
+                        // chamada service
+                        cartaoService.aumentaLimite(idCartao, aumentoDesejado);
+                        return ResponseEntity.ok("{\"message\": \"Limite aumentado com sucesso\"}");
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("{\"message\": \"Nao foi possivel concluir\"}");
                 }
         }
 }
