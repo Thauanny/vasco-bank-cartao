@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.VascoBankCartao.VascoBankCartaoart.models.CartaoCredito;
 import com.VascoBankCartao.VascoBankCartaoart.models.Compra;
+import com.VascoBankCartao.VascoBankCartaoart.service.CartaoService;
 import com.VascoBankCartao.VascoBankCartaoart.service.CompraService;
 
 @RestController
@@ -19,6 +21,8 @@ public class CompraController {
 
     @Autowired
     CompraService compraService;
+    @Autowired
+    private CartaoService cartaoService;
 
     @GetMapping("/{idCartao}")
     public ResponseEntity<?> retornarCompra(@PathVariable Integer idCartao) {
@@ -31,10 +35,18 @@ public class CompraController {
     }
 
     @PostMapping("/{idCartao}")
-    public ResponseEntity<?> cadastraFatura(@PathVariable Integer idCartao, @RequestBody Compra compra) {
+    public ResponseEntity<?> cadastraCompra(@PathVariable Integer idCartao, @RequestBody Compra compra) {
         try {
-            //todo ao registrar compra gerar fatura
+
+            CartaoCredito cartao = cartaoService.retornarCartao(idCartao);
+            // todo ao registrar compra gerar fatura
+            if (cartao.getLimite() < compra.getValor())
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\": \" Limite insuficiente \"}");
+
             compra.setIdCartao(idCartao);
+            cartao.setLimiteAux(cartao.getLimiteAux() - compra.getValor());
+            cartaoService.atualizarCartao(cartao);
             return ResponseEntity.ok(compraService.cadastraCompra(compra));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

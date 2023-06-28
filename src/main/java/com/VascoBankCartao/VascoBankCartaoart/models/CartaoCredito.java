@@ -29,29 +29,25 @@ public class CartaoCredito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_cartao")
-    Integer idCartaoCredito;
+    private Integer idCartaoCredito;
     @Column(name = "id_conta")
-    Integer idConta;
+    private Integer idConta;
     @Column(name = "nome")
-    String nome;
+    private String nome;
     @Column(name = "numero")
-    String numero;
+    private String numero;
     @Column(name = "dataVencimento")
-    String dataVencimento;
+    private String dataVencimento;
     @Column(name = "cvv")
-    String cvv;
+    private String cvv;
     @Column(name = "limite")
-    double limite;
+    private double limite;
     @Column(name = "limite_auxiliar")
-    double limiteAux;
+    private double limiteAux;
     @Column(name = "eligivel_aumento_limite")
-    boolean eligivelAumentoLimite;
+    private boolean eligivelAumentoLimite;
     @Column(name = "virtual")
-    boolean virtual;
+    private boolean virtual;
 
-    public static CartaoCredito cartaoCreditoAleatorio(){
-        return new CartaoCredito(123,321,"Cartão Teste","7",
-                "20/06/2023","13",1000.00, 1000.00,true,true);
-    }
     
 }

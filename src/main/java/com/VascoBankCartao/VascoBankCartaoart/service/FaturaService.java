@@ -42,4 +42,8 @@ public class FaturaService {
         return faturas;
 
     }
+
+    public Fatura retornarFatura(Integer idFatura) {
+        return faturaRepository.findById(idFatura).get();
+    }
 }

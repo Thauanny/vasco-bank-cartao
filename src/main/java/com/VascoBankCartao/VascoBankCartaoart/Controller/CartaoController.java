@@ -62,6 +62,20 @@ public class CartaoController {
                 }
         }
 
+        @PutMapping("/atualizar")
+        public ResponseEntity<?> atualizarCartao(@RequestBody CartaoCredito cartao) {
+                try {
+                        if (cartao == null)
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                                .body("{\"message\": \"usuario não possui cartao cadastrado\"}");
+
+                        return ResponseEntity.ok(cartaoService.atualizarCartao(cartao));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("{\"message\": \"Nao foi possivel concluir\"}");
+                }
+        }
+
         @GetMapping("/all/{idConta}")
         public ResponseEntity<?> retornarTodosCartoes(@PathVariable Integer idConta) {
                 try {

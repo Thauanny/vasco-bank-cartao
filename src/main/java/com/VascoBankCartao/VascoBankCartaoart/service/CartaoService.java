@@ -23,6 +23,22 @@ public class CartaoService {
         return cartaoRepository.findById(idCartao).get();
     }
 
+    public CartaoCredito atualizarCartao(CartaoCredito cartao) {
+        CartaoCredito _cartao =   retornarCartao(cartao.getIdCartaoCredito());
+        _cartao.setCvv(cartao.getCvv());
+        _cartao.setDataVencimento(cartao.getDataVencimento());
+        _cartao.setEligivelAumentoLimite(cartao.isEligivelAumentoLimite());
+        _cartao.setIdCartaoCredito(cartao.getIdCartaoCredito());
+        _cartao.setIdConta(cartao.getIdConta());
+        _cartao.setLimite(cartao.getLimite());
+        _cartao.setLimiteAux(cartao.getLimiteAux());
+        _cartao.setNome(cartao.getNome());
+        _cartao.setNumero(cartao.getNumero());
+        _cartao.setVirtual(cartao.isVirtual());
+        return cartaoRepository.save(_cartao);
+    }
+
+
     public List<CartaoCredito> retornarTodosCartoes(Integer contaId) {
         return cartaoRepository.findAllById(contaId);
     }
