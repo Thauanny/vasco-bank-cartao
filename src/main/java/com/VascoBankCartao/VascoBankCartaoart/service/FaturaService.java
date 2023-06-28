@@ -46,4 +46,17 @@ public class FaturaService {
     public Fatura retornarFatura(Integer idFatura) {
         return faturaRepository.findById(idFatura).get();
     }
+
+    public Fatura atualizarFatura(Fatura fatura) {
+       Fatura _fatura = faturaRepository.findById(fatura.getId()).get();
+       _fatura.setCompras(fatura.getCompras());
+       _fatura.setDataVencimento(fatura.getDataVencimento());
+       _fatura.setId(fatura.getId());
+       _fatura.setIdCartao(fatura.getIdCartao());
+       _fatura.setMesVencimento(fatura.getMesVencimento());
+       _fatura.setPaga(fatura.isPaga());
+       _fatura.setValorTotal(fatura.getValorTotal());
+       return faturaRepository.save(_fatura);
+
+    }
 }
