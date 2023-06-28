@@ -53,5 +53,25 @@ public class CompraController {
                     .body("{\"message\": \"Nao foi possivel concluir\"}");
         }
     }
+    @PostMapping("/{idCartao}")
+    public ResponseEntity<?> fazerCompraCartao(@PathVariable Integer idCartao, @RequestBody Compra compra, double juros){
+        try{
+            CartaoCredito cartao = cartaoService.retornarCartao(idCartao);
+            double valorCompra = compra.getValor() + (compra.getValor()*(juros/100)* compra.getParcelas());
+            if (valorCompra > cartao.getLimiteAux()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("{\"message\": \" Limite disponível insuficiente \"}");
+            }
+            else {
+                compra.setIdCartao(idCartao);
+                cartao.setLimiteAux(cartao.getLimiteAux() - compra.getValor());
+                cartaoService.atualizarCartao(cartao);
+                return ResponseEntity.ok(compraService.cadastraCompra(compra));
 
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": \"Nao foi possivel concluir\"}");
+        }
+    }
 }
