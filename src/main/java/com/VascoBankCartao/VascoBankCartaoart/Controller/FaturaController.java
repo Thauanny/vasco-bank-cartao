@@ -21,9 +21,20 @@ public class FaturaController {
     FaturaService faturaService;
 
     @GetMapping("/{idCartao}")
-    public ResponseEntity<?> retornarFatura(@PathVariable Integer idCartao) {
+    public ResponseEntity<?> retornarFaturas(@PathVariable Integer idCartao) {
         try {
             return ResponseEntity.ok(faturaService.retornarFaturas(idCartao));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("{\"message\": \"Nao foi possivel concluir\"}");
+        }
+    }
+
+    
+    @GetMapping("/{idCartao}")
+    public ResponseEntity<?> retornarFatura(@PathVariable Integer idCartao) {
+        try {
+            return ResponseEntity.ok(faturaService.retornarFatura(idCartao));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("{\"message\": \"Nao foi possivel concluir\"}");
